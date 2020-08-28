@@ -1,0 +1,109 @@
+"""
+AHMAD ZULFAHMI BIN HARUM 1626867
+HAZIQ ISKANDAR BIN SURIANI 1628259
+
+
+ASSIGNMENT 3
+"""
+import io
+import re
+
+posf = open("se/positive.txt", "r")
+negf = open("se/negative.txt", "r")
+nega = open("se/negation.txt", "r")
+boost = open("se/booster_inc.txt", "r")
+b=[]
+tweet=[]
+
+
+def sentiment_analysis(text):
+   positive = []
+   negative = []
+   dict = {}
+   pos_count = 0
+   neg_count = 0
+   nega_count = 0
+   booster =0
+   neu =0
+   for i in posf.read().split('\n'):
+      positive.append(i)
+   for i in negf.read().split('\n'):
+      negative.append(i)
+   #print(text)
+   #print(positive)
+   #print(negative)
+
+   for i in text.split(" "):
+      if i in positive:
+         pos_count += 1
+         print('pos')
+      elif i in negative:
+         neg_count += 1
+         print('neg')
+      elif i in nega:
+         nega_count += 1
+         print('nah')
+      elif i in boost:
+         booster += 1
+         print('nah')
+
+
+   pos = (pos_count+booster) / len(text)
+   neg = (neg_count+nega_count) / len(text)
+   nega_count = neg_count / len(text)
+   booster = neg_count / len(text)
+   print('Positive Score:')
+   print(pos_count)
+   print('Negative Score:')
+   print(neg_count)
+   dict['tweet'] = text
+   dict['p-score'] = pos_count
+   dict['n-score'] = neg_count
+
+   return dict
+
+
+def clean_tweet(tweet):
+   '''
+   Utility function to clean tweet text by removing links, special characters
+   using simple regex statements.
+   '''
+   return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])| (\w+:\ / \ / \S+) ", " ", tweet).split())
+
+def rank(tweet):
+   print('Status:')
+   if tweet['p-score'] > tweet['n-score']:
+      return 'Positive'
+   elif tweet['p-score'] < tweet['n-score']:
+      return 'Negative'
+   else:
+      return 'Neutral'
+
+with open("beirutblast_raw.dat",'r') as file:
+   total=[]
+   dict={}
+   for line in file.read().split('\n'):
+      b = line.split(',')
+      #dict = i
+      for j in b:
+         if '"extended_tweet"' in j.split(':'):
+            t = j.split(':')
+            #print(t[2])
+            tweet.append(t[2])
+            #print(j[0])
+            #or x in j.split(':'):
+               #print(x)
+               #if x
+print(tweet)
+for i in tweet:
+   x = clean_tweet(i)
+   print('\n')
+   print('Tweet:')
+   print(x)
+   print(rank(sentiment_analysis(i)))
+      #print(i)
+      #rint(b)
+      #total.append(dict)
+
+      #print(total)
+
